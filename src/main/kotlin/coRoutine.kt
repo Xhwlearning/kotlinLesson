@@ -1,13 +1,10 @@
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-
 /*协程
-    含义：是一个基于线程的上层框架；优势在于比线程更方便，能够更容易写出并发代码，能够在同一个代码块里进行多次的线程切换。
+    含义：是一个基于线程的上层框架；优势在于比线程更方便，能够用线性的结构写异步代码，能够在同一个代码块里进行多次的线程切换。
     代码块：在launch大括号“{线程123}”里的线程们组成的框架就是协程。
 */
 
 //伪代码
-launch(Dispatchers.Main){ // 主线程
+GlobalScope.launch(Dispatchers.Main){ // 主线程
     val user = api.getUser() //网络请求：后台线程
     nameTv.text = user.name //更新UI：主线程
     val image = withContext(Dispatchers.IO){ //withContext可以指定线程执行，并在执行完毕后自动切回来
@@ -35,3 +32,11 @@ suspend fun suspendingGetImage(imageId : String){
     }
 }
 
+/*协程自带的用来提供后台线程池的ContinuationInterceptor，用于填充协程launch的输入参数
+    Dispatcher调度器：
+       后台线程：
+        Default:线程数与CPU核数相同，用于计算密集型任务，例如图片压缩，媒体编解码；
+        IO:线程数一般为64，因为IO数磁盘或者网卡在工作，CPU是比较空闲的，所以线程数可以分配的多，用于磁盘和网络访问工作；
+       主线程：
+        Main:例如UI线程。
+*/
