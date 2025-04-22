@@ -13,7 +13,7 @@ fun String.myFilter(predicate : Char.() -> Boolean) : String{
     return buildString{
         for (ch in this@myFilter){
             if(ch.predicate()){
-                this.append(ch)
+                append(ch)
             }
         }
     }
